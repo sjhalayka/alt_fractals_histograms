@@ -17,9 +17,15 @@ void quaternion_julia_set_equation_parser::cleanup(void)
 
 void get_path_properties(vector<vector_4>& points, double& length, double& displacement, double& magnitude)
 {
-	if (points.size() < 2)
+	if (points.size() == 0)
 	{
 		length = displacement = magnitude = 0.0f;
+		return;
+	}
+	else if (points.size() == 1)
+	{
+		length = displacement = 0.0f;
+		magnitude = points[0].length();
 		return;
 	}
 
