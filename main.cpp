@@ -11,14 +11,15 @@ using namespace std;
 
 
 
+void write_histogram(vector<float> input_vec, const char* const filename);
 
 
 int main(void)
 {
 	vector<float> input_vec;
-	
+
 	size_t res = 100;
-	
+
 	float x_grid_max = 1.5;
 	float y_grid_max = 1.5;
 	float z_grid_max = 1.5;
@@ -69,17 +70,21 @@ int main(void)
 
 				float mag = eqparser.iterate_magnitude(points, Z, max_iterations, threshold);
 
-				if(mag >= threshold)
+				if (1)//mag >= threshold)
 				{
 					double l = 0, d = 0, m = 0;
 					get_path_properties(points, l, d, m);
 
-					input_vec.push_back(static_cast<float>(l));
+					input_vec.push_back(static_cast<float>(m));
 				}
-			}
+			}	
 		}
 	}
 
+	write_histogram(input_vec, "maagnitude_all_20.png");
+
+	return 0;
+}
 
 
 
@@ -88,12 +93,8 @@ int main(void)
 
 
 
-
-
-
-
-
-
+void write_histogram(vector<float> input_vec, const char* const filename)
+{
 
 	float input_vec_max_val = 0;
 
@@ -156,9 +157,7 @@ int main(void)
 
 	circle(histImage, Point(static_cast<int>(largest_hist_j) * bin_w, 0), 2, Scalar(255, 127, 0), 2);
 
-
-	imshow("calcHist Demo", histImage);
-	waitKey();
-
-	return 0;
+	imwrite(filename, histImage);
+	//imshow("calcHist Demo", histImage);
+	//waitKey();
 }
