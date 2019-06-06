@@ -93,7 +93,11 @@ public:
 	quaternion_julia_set_equation_parser() { setup_function_map(); }
 	~quaternion_julia_set_equation_parser() { cleanup(); }
 	bool setup(const string &src_formula, string &error_output, const quaternion &src_C);
-	float iterate(vector<vector_4> &points, const quaternion &src_Z, const short unsigned int &max_iterations, const float &threshold);
+	float iterate_length(vector<vector_4>& points, const quaternion& src_Z, const short unsigned int& max_iterations, const float& threshold);
+	float iterate_displacement(vector<vector_4>& points, const quaternion& src_Z, const short unsigned int& max_iterations, const float& threshold);
+	float iterate_magnitude(vector<vector_4>& points, const quaternion& src_Z, const short unsigned int& max_iterations, const float& threshold);
+
+
 	string get_unique_formula_string(void);
 
 protected:
@@ -134,5 +138,9 @@ protected:
 	vector< assembled_instruction > execution_stack;
 	vector< function_mapping > function_map;
 };
+
+
+void get_path_properties(vector<vector_4>& points, double& length, double& displacement, double& magnitude);
+
 
 #endif

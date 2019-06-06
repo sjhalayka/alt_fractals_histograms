@@ -15,8 +15,103 @@ void quaternion_julia_set_equation_parser::cleanup(void)
 	execution_stack.clear();
 }
 
-// don't need c, because it's passed in through setup
-float quaternion_julia_set_equation_parser::iterate(vector<vector_4> &points, const quaternion &src_Z, const short unsigned int &max_iterations, const float &threshold)
+void get_path_properties(vector<vector_4>& points, double& length, double& displacement, double& magnitude)
+{
+	if (points.size() < 2)
+	{
+		length = displacement = magnitude = 0.0f;
+		return;
+	}
+
+	double total_len = 0;
+
+	for (size_t i = 0; i < points.size() - 1; i++)
+	{
+		vector_4 line = points[i + 1] - points[i];
+
+		double line_len = line.length();
+		total_len += line_len;
+	}
+
+	length = total_len;
+	displacement = (points[points.size() - 1] - points[0]).length();
+	magnitude = points[points.size() - 1].length();
+}
+
+float quaternion_julia_set_equation_parser::iterate_length(vector<vector_4>& points, const quaternion& src_Z, const short unsigned int& max_iterations, const float& threshold)
+{
+	Z = src_Z;
+
+	points.clear();
+
+	vector_4 p;
+	p.x = Z.x;
+	p.y = Z.y;
+	p.z = Z.z;
+	p.w = Z.w;
+	points.push_back(p);
+
+	double l = 0;
+
+	for (short unsigned int i = 0; i < max_iterations; i++)
+	{
+		for (size_t i = 0; i < execution_stack.size(); i++)
+			(q_math.*execution_stack[i].f)(execution_stack[i].a, execution_stack[i].b, execution_stack[i].out);
+
+		p.x = Z.x;
+		p.y = Z.y;
+		p.z = Z.z;
+		p.w = Z.w;
+		points.push_back(p);
+
+		double d = 0, m = 0;
+		get_path_properties(points, l, d, m);
+
+		if (l >= threshold)
+			break;
+	}
+
+	return static_cast<float>(l);
+}
+
+float quaternion_julia_set_equation_parser::iterate_displacement(vector<vector_4>& points, const quaternion& src_Z, const short unsigned int& max_iterations, const float& threshold)
+{
+	Z = src_Z;
+
+	points.clear();
+
+	vector_4 p;
+	p.x = Z.x;
+	p.y = Z.y;
+	p.z = Z.z;
+	p.w = Z.w;
+	points.push_back(p);
+
+	double d = 0;
+
+	for (short unsigned int i = 0; i < max_iterations; i++)
+	{
+		for (size_t i = 0; i < execution_stack.size(); i++)
+			(q_math.*execution_stack[i].f)(execution_stack[i].a, execution_stack[i].b, execution_stack[i].out);
+
+		p.x = Z.x;
+		p.y = Z.y;
+		p.z = Z.z;
+		p.w = Z.w;
+		points.push_back(p);
+
+		double l = 0, m = 0;
+		get_path_properties(points, l, d, m);
+
+		if (d >= threshold)
+			break;
+	}
+
+	return static_cast<float>(d);
+}
+
+
+float quaternion_julia_set_equation_parser::iterate_magnitude(vector<vector_4> &points, const quaternion &src_Z, const short unsigned int &max_iterations, const float &threshold)
 {
 	Z = src_Z;
 

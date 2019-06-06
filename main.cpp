@@ -8,6 +8,11 @@ using namespace std;
 
 #include "eqparse.h"
 
+
+
+
+
+
 int main(void)
 {
 	vector<float> input_vec;
@@ -32,8 +37,7 @@ int main(void)
 	C.z = 0.4f;
 	C.w = 0.2f;
 	unsigned short int max_iterations = 8;
-	float threshold = 4;
-
+	float threshold = 20.0f;
 
 	string error_string;
 	quaternion_julia_set_equation_parser eqparser;
@@ -63,11 +67,14 @@ int main(void)
 			{
 				vector<vector_4> points;
 
-				float length = eqparser.iterate(points, Z, max_iterations, threshold);
+				float mag = eqparser.iterate_magnitude(points, Z, max_iterations, threshold);
 
-				if (length < threshold)
+				if(mag >= threshold)
 				{
-					input_vec.push_back(length);
+					double l = 0, d = 0, m = 0;
+					get_path_properties(points, l, d, m);
+
+					input_vec.push_back(static_cast<float>(l));
 				}
 			}
 		}
