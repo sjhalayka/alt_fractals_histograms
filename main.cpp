@@ -81,7 +81,7 @@ int main(void)
 		}
 	}
 
-	write_histogram(input_vec, "maagnitude_all_20.png");
+	write_histogram(input_vec, "magnitude_all_20.png");
 
 	return 0;
 }
