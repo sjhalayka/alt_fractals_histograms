@@ -88,7 +88,7 @@ int main(void)
 {
 	vector<vector<float> > input_vec;
 
-	for (short unsigned int i = 0; i <= 8; i++)
+	for (short unsigned int i = 0; i < 8; i++)
 	{
 		vector<float> input;
 
